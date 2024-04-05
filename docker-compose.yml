@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  application:
+    build: ./
+    container_name: 'java-app'
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+    volumes:
+      - telerandomizer-app:/app
+    environment:
+      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://appdatabase:5432/telerandomizer_db'
+      - 'SPRING_DATASOURCE_USERNAME=postgres'
+      - 'SPRING_DATASOURCE_PASSWORD=sqlpostgre'
+    links:
+      - 'postgres:appdatabase'
+    restart: unless-stopped
+
+  postgres:
+    image: 'postgres:15'
+    container_name: 'java-postgres'
+    user: postgres
+    environment:
+      - 'POSTGRES_PASSWORD=sqlpostgre'
+      - 'POSTGRES_DB=telerandomizer_db'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "telerandomizer_db"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - telerandomizer-data:/var/lib/postgresql/data
+    ports:
+      - "15432:5432"
+    restart: unless-stopped
+
+  pg_admin:
+    image: dpage/pgadmin4:7
+    container_name: pgadmin4
+    environment:
+        PGADMIN_DEFAULT_EMAIL: telerandomizer@gmail.com
+        PGADMIN_DEFAULT_PASSWORD: kontik08
+    ports:
+        - "5050:80"
+    restart: unless-stopped
+
+volumes:
+  telerandomizer-app:
+  telerandomizer-data:

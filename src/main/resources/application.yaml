@@ -1,0 +1,36 @@
+server:
+  port: ${PORT:80}
+  error:
+    whitelabel:
+      enabled: false
+  servlet:
+    session:
+      persistent: false
+
+vaadin:
+  productionMode: true
+  whitelisted-packages: ru.romanov
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://appdatabase:5432/telerandomizer_db
+    username: postgres
+    password: sqlpostgre
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: false
+        generate_statistics: false
+        order_inserts: true
+        jdbc:
+          batch_size: 100
+        ddl-auto: validate
+  flyway:
+    enabled: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
